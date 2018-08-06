@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/ghthor/gowol"
 	"html/template"
+	"io/ioutil"
 	"log"
 	"net/http"
 )
@@ -62,7 +63,8 @@ func checkUserLogin(r *http.Request) (authInfo, error) {
 		return authInfo{}, nil
 	}
 
-	resp, err := http.Get("https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" + authTokenCookie.Value)
+	authUrl := "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=" + authTokenCookie.Value
+	resp, err := http.Get(authUrl)
 	if err != nil {
 		return authInfo{}, err
 	}
@@ -72,14 +74,18 @@ func checkUserLogin(r *http.Request) (authInfo, error) {
 		Email string `json:"email"`
 	}{}
 
-	dec := json.NewDecoder(resp.Body)
-	err = dec.Decode(&jsonVals)
+	bytes, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return authInfo{}, err
+	}
+
+	err = json.Unmarshal(bytes, &jsonVals)
 	if err != nil {
 		return authInfo{}, err
 	}
 
 	if jsonVals.Aud != "141488749003-audttelm23ke99cmd1qgc4utd9hpqopu.apps.googleusercontent.com" {
-		return authInfo{}, errors.New("Invalid aud used to authenticate: " + jsonVals.Aud)
+		return authInfo{}, errors.New("Invalid aud used to authenticate: " + string(bytes) + "\nauthUrl: " + authUrl)
 	}
 
 	return authInfo{
