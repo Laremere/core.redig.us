@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Home</title>
+        <title>Molten Core</title>
 
         <link rel="stylesheet" type="text/css" href="static/style.css">
         <script src="static/script.js"></script>
@@ -9,7 +9,7 @@
         <meta name="google-signin-client_id" content="141488749003-audttelm23ke99cmd1qgc4utd9hpqopu.apps.googleusercontent.com">
     </head>
     <body>
-        <p>Welcome to home.redig.us</p>
+        <p>Welcome to Molten Core</p>
         {{if .Auth.LoggedIn}}
             <p>You are logged in as {{.Auth.Email}}</p>
             <button onclick="signOut()">Log out</button>
@@ -17,6 +17,6 @@
             <div class="g-signin2" data-onsuccess="onSignIn"></div>
         {{end}}
 
-        <p>On the local network and can't reach home.redig.us?  Add "192.168.86.113 home.redig.us" to your hosts file.</p>
+        <p>TODO(laremere@gmail.com): This advice is old.  Update on using the dns.  On the local network and can't reach home.redig.us?  Add "192.168.86.113 home.redig.us" to your hosts file.</p>
     </body>
 </html>
